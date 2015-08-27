@@ -35,6 +35,8 @@ import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParseException;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cristalise.kernel.common.InvalidDataException;
+import org.cristalise.kernel.common.ObjectNotFoundException;
+import org.cristalise.kernel.utils.LocalObjectLoader;
 import org.cristalise.kernel.utils.Logger;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -70,10 +72,15 @@ public class OutcomeValidator implements ErrorHandler, XMLErrorHandler {
     SymbolTable sym = new SymbolTable();
 
     public static OutcomeValidator getValidator(Schema schema) throws InvalidDataException {
-    	
-        if (schema.docType.equals("Schema") &&
-        		schema.docVersion==0)
-            return schemaValid;
+        if (schema.docType.equals("Schema") && schema.docVersion==0) return schemaValid;
+
+         return new OutcomeValidator(schema);
+    }
+    
+    public static OutcomeValidator getValidatorForOutcome(Outcome o) throws InvalidDataException, ObjectNotFoundException {
+        Schema schema = LocalObjectLoader.getSchema(o.getSchemaType(), o.getSchemaVersion()); 
+
+        if (schema.docType.equals("Schema") && schema.docVersion==0) return schemaValid;
 
          return new OutcomeValidator(schema);
     }
@@ -114,9 +121,10 @@ public class OutcomeValidator implements ErrorHandler, XMLErrorHandler {
 
 	public synchronized String validate(Outcome outcome) {
         if (outcome == null) return "Outcome object was null";
+
         Logger.msg(5, "Validating outcome no "+outcome.getID()+" as "+schema.docType+" v"+schema.docVersion);
-        if (outcome.getSchemaType().equals(schema.docType)
-                    && outcome.getSchemaVersion() == schema.docVersion) {
+
+        if (outcome.getSchemaType().equals(schema.docType) && outcome.getSchemaVersion() == schema.docVersion) {
             return validate(outcome.getData());
         }
         else
