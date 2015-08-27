@@ -67,9 +67,13 @@ public class Viewpoint implements C2KLocalObject {
 		this.eventId = eventId;
 	}
 
-	public Outcome getOutcome() throws ObjectNotFoundException, PersistencyException {
+    public Outcome getOutcome() throws ObjectNotFoundException, PersistencyException {
+        return getOutcome(null);
+    }
+
+	public Outcome getOutcome(Object locker) throws ObjectNotFoundException, PersistencyException {
 		if (eventId == NONE) throw new ObjectNotFoundException("No last eventId defined");
-		Outcome retVal = (Outcome)Gateway.getStorage().get(itemPath, ClusterStorage.OUTCOME+"/"+schemaName+"/"+schemaVersion+"/"+eventId, null);
+		Outcome retVal = (Outcome)Gateway.getStorage().get(itemPath, ClusterStorage.OUTCOME+"/"+schemaName+"/"+schemaVersion+"/"+eventId, locker);
 		return retVal;
 	}
 
