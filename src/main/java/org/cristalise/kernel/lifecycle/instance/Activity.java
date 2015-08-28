@@ -203,8 +203,8 @@ public class Activity extends WfVertex
 			else 
 				newEvent = hist.addEvent(agent, usedRole, getName(), getPath(), getType(), 
 						getStateMachine().getName(), getStateMachine().getVersion(), transition);
-			
-			Logger.msg(7, "Activity::auditEvent() - Event:" + newEvent.getName() + " was added to the AuditTrail");
+
+			Logger.msg(7, "Activity::request() - Event:"+newEvent.getName()+" was added to the AuditTrail of item "+itemPath);
 	
 			if (storeOutcome) {
 				Outcome newOutcome = new Outcome(newEvent.getID(), outcome, schema.docType, schema.docVersion);
@@ -218,6 +218,8 @@ public class Activity extends WfVertex
 				// update last view
 				Viewpoint currentView = new Viewpoint(itemPath, schema.docType, "last", schema.docVersion, newEvent.getID());
 				Gateway.getStorage().put(itemPath, currentView, locker);
+
+	            Logger.msg(7, "Activity::request() - Outcome type '"+schema.docType+"' was added to item "+itemPath);
 			}
 			Gateway.getStorage().commit(locker);
 		} catch (PersistencyException ex) {
