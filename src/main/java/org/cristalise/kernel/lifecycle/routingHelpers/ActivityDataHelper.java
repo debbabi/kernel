@@ -32,6 +32,7 @@ import org.cristalise.kernel.persistency.ClusterStorage;
 import org.cristalise.kernel.persistency.outcome.Outcome;
 import org.cristalise.kernel.persistency.outcome.Viewpoint;
 import org.cristalise.kernel.process.Gateway;
+import org.cristalise.kernel.utils.Logger;
 
 /**
  * Implements the Routing DataHelper to get Outcome data using Activity path and XPath. 
@@ -68,6 +69,8 @@ public class ActivityDataHelper implements DataHelper {
 
         String actPath = paths[0];
         String xpath   = paths[1];
+
+        Logger.msg(5,"ActivityDataHelper.get() - actPath:'"+actPath+"' xpath:'"+xpath+"'");
 
         // Find the referenced activity
         GraphableVertex act = workflow.search(actPath);
