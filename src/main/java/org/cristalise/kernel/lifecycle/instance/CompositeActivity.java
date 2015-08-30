@@ -187,8 +187,8 @@ public class CompositeActivity extends Activity
             case XOrSplit:  return newSplitChild(name, "XOr",  first, point);
             case AndSplit:  return newSplitChild(name, "And",  first, point);
             case LoopSplit: return newSplitChild(name, "Loop", first, point);
-            case Join:      return newJoinChild(point);
-            case Route:     return newRouteChild(point);
+            case Join:      return newJoinChild(name, "Join",  first, point);
+            case Route:     return newJoinChild(name, "Route", first, point);
     
             default:
                 throw new IllegalArgumentException("Unhandled enum value of WfVertex.Type:" + type.name());
@@ -258,14 +258,16 @@ public class CompositeActivity extends Activity
      * @param point
      * @return Join
      */
-    public Join newJoinChild(GraphPoint point)
+    public Join newJoinChild(String name, String type, boolean first, GraphPoint point)
     {
         Join join = new Join();
-        join.getProperties().put("Type", "Join");
-        safeAddChild(join, point);
+        join.getProperties().put("Type", type);
+        initChild(join, first, point);
+        join.setName(name);
         return join;
     }
 
+    /*
     public Join newRouteChild(GraphPoint point)
     {
         Join join = new Join();
@@ -273,6 +275,7 @@ public class CompositeActivity extends Activity
         safeAddChild(join, point);
         return join;
     }
+    */
 
     /**
      * None recursive search by id
