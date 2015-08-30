@@ -75,6 +75,8 @@ public class ActivityDataHelper implements DataHelper {
         // Find the referenced activity
         GraphableVertex act = workflow.search(actPath);
 
+        if(act == null) throw new InvalidDataException("Cannot find activity path:"+actPath);
+
         // Get the schema and viewpoint names
         String schemaName = act.getProperties().get("SchemaType").toString();
         String viewName   = act.getProperties().get("Viewpoint").toString();
